@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async() => {
-    res = await fetch('https://restcountries.com/v3.1/region/america?fields=name,population,area');
+    res = await fetch('https://restcountries.com/v3.1/region/oceania?fields=name,population,area');
     let data = await res.json();
 
     let tm_container = document.querySelector('#tm_container');
@@ -30,12 +30,13 @@ document.addEventListener('DOMContentLoaded', async() => {
         return b.area_ratio - a.area_ratio; 
     })
 
+    const base_row = Math.ceil(ratio_per_country.length * (tm_container.offsetHeight / tm_container.offsetWidth));
 
     ratio_per_country.forEach((curr) => {
         let div = document.createElement("div");
         div.setAttribute('style', `
-            grid-column: span ${Math.ceil(curr.area_ratio * ratio_per_country.length * (window.screen.width / window.screen.height))}; 
-            grid-row: span ${Math.ceil(curr.area_ratio * ratio_per_country.length * (window.screen.height / window.screen.width))};
+            grid-column: span ${Math.ceil(curr.area_ratio * base_row)}; 
+            grid-row: span ${Math.ceil(curr.area_ratio * base_row)};
             background-color: rgba(255, 0, 0, ${curr.population_ratio / max_color_ratio})
             `);
         let h5 = document.createElement('h5');
@@ -45,9 +46,9 @@ document.addEventListener('DOMContentLoaded', async() => {
         tm_container.appendChild(div); 
     })
 
-    const base_row = Math.ceil(ratio_per_country.length * (window.screen.height / window.screen.width));
+    console.log(`${ratio_per_country.length} * (${tm_container.offsetHeight} / ${tm_container.offsetWidth})`)
     //versão alternativa: comente este método
     tm_container.setAttribute( 
-        'style',  `grid-template-rows: repeat(${base_row}, ${window.screen.height / base_row}px);` 
+        'style',  `grid-template-rows: repeat(${base_row}, ${tm_container.offsetHeight / base_row}px);` 
     ); 
 })
